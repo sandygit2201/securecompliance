@@ -1,36 +1,38 @@
 class PaymentPage {
+  //  fill payment details in iframe
   fillCardDetailsAndPay(cardInfo) {
     cy.wait(5000);
     cy.get('iframe[name="embedded-checkout"]').then((iframe) => {
-      const iframe_body = cy.wrap(iframe.contents().find("body"));
-
-      iframe_body.find("#cardNumber").type(cardInfo.number);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("#cardNumber")
+        .type(cardInfo.number);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("input[name='cardExpiry']")
+        .type(cardInfo.expiry);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("#cardCvc")
+        .type(cardInfo.cvc);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("#billingName")
+        .type(cardInfo.name);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("#billingPostalCode")
+        .type(cardInfo.postalCode);
+      cy.wait(3000);
+      cy.wrap(iframe.contents().find("body"))
+        .find("[data-testid='hosted-payment-submit-button']")
+        .click({ force: true });
     });
-    cy.wait(3000);
-    cy.get('iframe[name="embedded-checkout"]').then((iframe) => {
-      const iframe_body = cy.wrap(iframe.contents().find("body"));
-
-      iframe_body.find("input[name='cardExpiry']").type(cardInfo.expiry);
-    });
-    cy.wait(3000);
-    cy.get('iframe[name="embedded-checkout"]').then((iframe) => {
-      const iframe_body = cy.wrap(iframe.contents().find("body"));
-
-      iframe_body.find("#cardCvc").type(cardInfo.cvc);
-    });
-
-    cy.wait(3000);
-    cy.get('iframe[name="embedded-checkout"]').then((iframe) => {
-      cy.wrap(iframe.contents().find("body")).find("#billingName").type(cardInfo.expiry);
-      cy.wrap(iframe.contents().find("body")).find("#billingPostalCode").type(cardInfo.postalCode);
-    });
-    
-    // cy.get("#billingCountry").select(cardInfo.country);
-    // cy.get("#billingPostalCode").type(cardInfo.pin);
 
     cy.contains("Your payment has been processed.").should("be.visible");
-
+    cy.wait(3000);
     cy.contains("Next").click();
+    cy.wait(3000);
     cy.contains("Back to Dashboard").click();
   }
 
